@@ -108,7 +108,7 @@ function StatCards() {
     return <>{fmt(n)}</>
   }
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-16">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible">
         {stats.map((s) => (
           <div key={s.label} className="min-w-[240px] sm:min-w-0 snap-start relative rounded-2xl bg-zinc-800/80 grid-pattern noise-overlay backdrop-blur-md shadow-soft border border-white/10 p-6">
@@ -266,12 +266,9 @@ function SupportAndInfo() {
         </div>
         <div className="rounded-xl bg-zinc-800/70 backdrop-blur shadow-soft border border-zinc-700/40 p-6">
           <h3 className="text-xl font-bold">채널 정보</h3>
-          <div className="mt-3 text-sm text-zinc-300">
-            가입일: 2019. 10. 31.
-          </div>
           <p className="mt-3 text-zinc-300">
-            게임과 일상, 다양한 실험 콘텐츠를 통해 재미를 전달하는
-            왔다남진의 공식 팬페이지입니다.
+            게임과 일상, 다양한 실험 콘텐츠로 도파민을 폭발시키는 재미 공장.
+            왔다남진 공식 팬페이지에서 웃음·몰입·설렘을 가장 빠르게 받아가세요!
           </p>
         </div>
       </div>
