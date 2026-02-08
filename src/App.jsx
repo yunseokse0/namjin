@@ -267,8 +267,9 @@ function SupportAndInfo() {
         <div className="rounded-xl bg-zinc-800/70 backdrop-blur shadow-soft border border-zinc-700/40 p-6">
           <h3 className="text-xl font-bold">채널 정보</h3>
           <p className="mt-3 text-zinc-300">
-            게임과 일상, 다양한 실험 콘텐츠로 도파민을 폭발시키는 재미 공장.
-            왔다남진 공식 팬페이지에서 웃음·몰입·설렘을 가장 빠르게 받아가세요!
+            <span className="highlight font-semibold text-zinc-100">게임</span>과 <span className="highlight font-semibold text-zinc-100">일상</span>,
+            즉흥적인 <span className="highlight font-semibold text-zinc-100">실험</span>으로 <span className="highlight font-semibold text-zinc-100">도파민</span>을 즉시 충전.
+            왔다남진 팬페이지에서 <span className="highlight font-semibold text-zinc-100">웃음</span>·<span className="highlight font-semibold text-zinc-100">몰입</span>·<span className="highlight font-semibold text-zinc-100">설렘</span>을 가장 빠르게 받아가세요.
           </p>
         </div>
       </div>
