@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { getChannelIdByQuery, fetchLatestUploads } from './lib/youtube'
 
 function Header() {
@@ -6,7 +6,7 @@ function Header() {
     <header className="border-b border-zinc-800/60 bg-zinc-900/60 backdrop-blur">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-4">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-md bg-gradient-to-tr from-accent to-accent-blue" />
+          <div className="h-8 w-8 rounded-md bg-gradient-to-tr from-accent to-amber-600" />
           <span className="text-xl font-bold">왔다남진</span>
         </div>
         <nav className="hidden md:flex items-center gap-6 text-sm">
@@ -22,6 +22,7 @@ function Header() {
             rel="noreferrer"
             className="btn-outline"
           >
+            <img src="/youtubeicon.png" alt="YouTube" className="h-4 w-4" />
             채널 바로가기
           </a>
         </div>
@@ -44,10 +45,14 @@ function Hero() {
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         <div className="mx-auto max-w-3xl text-center space-y-6">
-          <div className="mx-auto size-28 sm:size-36 rounded-full overflow-hidden neon-glow ring-2 ring-violet-500">
-            <div
-              className="h-full w-full bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900"
-              style={{ backgroundImage: "url('/profile.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+          <div className="mx-auto size-28 sm:size-36 rounded-full overflow-hidden neon-glow ring-2 ring-amber-400">
+            <img
+              src="/channels4_profile.jpg"
+              alt="왔다남진 프로필"
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+              }}
             />
           </div>
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tighter">
@@ -61,8 +66,9 @@ function Hero() {
               href="https://www.youtube.com/@왔다남진"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-500 to-blue-500 px-5 py-2.5 font-semibold text-white shadow-soft hover:scale-[1.02] transition"
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 px-5 py-2.5 font-semibold text-black shadow-soft hover:scale-[1.02] transition"
             >
+              <img src="/youtubeicon.png" alt="YouTube" className="h-5 w-5" />
               유튜브 채널
             </a>
             <a
@@ -119,8 +125,6 @@ function StatCards() {
 
 function VideoGrid() {
   const [videos, setVideos] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   useEffect(() => {
     const run = async () => {
       try {
@@ -131,7 +135,6 @@ function VideoGrid() {
         const list = await fetchLatestUploads(key, channelId, 6)
         setVideos(list)
       } catch {
-        setError('실제 데이터를 불러올 수 없어 더미 데이터를 표시합니다')
         setVideos(
           Array.from({ length: 6 }).map((_, i) => ({
             id: i + 1,
@@ -143,8 +146,6 @@ function VideoGrid() {
             description: '',
           })),
         )
-      } finally {
-        setLoading(false)
       }
     }
     run()
@@ -170,9 +171,9 @@ function VideoGrid() {
             href={v.url || "https://www.youtube.com/@왔다남진"}
             target="_blank"
             rel="noreferrer"
-            className="group relative rounded-2xl bg-zinc-800/80 backdrop-blur-md shadow-soft border border-white/10 overflow-hidden transition-transform hover:-translate-y-1 hover:scale-[1.02] hover:border-violet-500"
+            className="group relative rounded-2xl bg-zinc-800/80 backdrop-blur-md shadow-soft border border-white/10 overflow-hidden transition-transform hover:-translate-y-1 hover:scale-[1.02] hover:border-amber-500"
           >
-            <span className="badge bg-violet-500/30 text-white">NEW</span>
+            <span className="badge bg-amber-500/30 text-white">NEW</span>
             <div className="aspect-video bg-zinc-700 relative">
               {v.thumb ? (
                 <img src={v.thumb} alt={v.title} className="absolute inset-0 w-full h-full object-cover" />
@@ -198,45 +199,37 @@ function VideoGrid() {
   )
 }
 
+import { posts as localPosts } from './data/posts'
 function Posts() {
-  const [posts, setPosts] = useState([])
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const key = import.meta.env.VITE_YT_API_KEY
-        if (!key) return
-        const channelId = await getChannelIdByQuery(key, '왔다남진')
-        if (!channelId) return
-        const list = await fetchLatestUploads(key, channelId, 6)
-        setPosts(
-          list.map((v) => ({
-            id: v.id,
-            title: v.title,
-            date: v.date,
-            excerpt: v.description?.slice(0, 120) || '',
-            url: v.url,
-          })),
-        )
-      } catch {
-      }
-    }
-    run()
-  }, [])
+  const [selected, setSelected] = useState(null)
   return (
     <section id="posts" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-end justify-between">
         <h2 className="text-2xl font-bold">게시물</h2>
       </div>
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((p) => (
-          <a key={p.id} href={p.url} target="_blank" rel="noreferrer" className="group rounded-2xl bg-zinc-800/80 backdrop-blur-md shadow-soft border border-white/10 p-6 hover:border-violet-500 transition">
+        {localPosts.map((p) => (
+          <button key={p.id} onClick={() => setSelected(p)} className="text-left group rounded-2xl bg-zinc-800/80 backdrop-blur-md shadow-soft border border-white/10 p-6 hover:border-amber-500 transition">
             <div className="text-sm text-zinc-400">{p.date}</div>
             <div className="mt-2 font-semibold">{p.title}</div>
-            <div className="mt-2 text-zinc-300 text-sm line-clamp-2">{p.excerpt}</div>
-            <div className="mt-4 text-violet-400 text-sm">영상으로 이동</div>
-          </a>
+            <div className="mt-2 text-zinc-300 text-sm">{p.excerpt}</div>
+            <div className="mt-4 text-amber-400 text-sm">자세히 보기</div>
+          </button>
         ))}
       </div>
+      {selected && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setSelected(null)} />
+          <div className="relative w-full max-w-lg rounded-2xl bg-zinc-900 border border-white/10 p-6">
+            <div className="text-sm text-zinc-400">{selected.date}</div>
+            <div className="mt-2 font-semibold text-lg">{selected.title}</div>
+            <div className="mt-3 text-zinc-300 text-sm whitespace-pre-line">{selected.content}</div>
+            <div className="mt-6 flex justify-end">
+              <button onClick={() => setSelected(null)} className="rounded-lg border border-white/10 px-4 py-2 text-zinc-200 hover:bg-zinc-800 transition">닫기</button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
@@ -254,7 +247,7 @@ function SupportAndInfo() {
             href="https://toon.at/donate/skawls56"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-500 to-blue-500 px-5 py-2.5 font-semibold text-white shadow-soft hover:scale-[1.02] transition mt-4 w-fit"
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 px-5 py-2.5 font-semibold text-black shadow-soft hover:scale-[1.02] transition mt-4 w-fit"
           >
             투네이션 후원
           </a>
@@ -266,7 +259,7 @@ function SupportAndInfo() {
             <div className="rounded-2xl bg-zinc-900/60 border border-white/10 p-4">
               <div className="text-sm text-zinc-400">안내</div>
               <p className="mt-2 text-zinc-300 text-sm">
-                계좌 정보는 안전한 환경변수로 관리됩니다. 복사 버튼을 눌러 간편하게 전달할 수 있습니다.
+                {import.meta.env.VITE_BANK_NOTE || '계좌 정보는 안전한 환경변수로 관리됩니다. 복사 버튼을 눌러 간편하게 전달할 수 있습니다.'}
               </p>
             </div>
           </div>
@@ -353,11 +346,23 @@ export default function App() {
         href="https://www.youtube.com/@왔다남진"
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 text-white flex items-center justify-center shadow-soft hover:scale-105 transition"
+        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 text-black flex items-center justify-center shadow-soft hover:scale-105 transition"
         aria-label="유튜브 구독하기"
       >
-        ★
+        <img src="/youtubeicon.png" alt="YouTube" className="h-6 w-6" />
       </a>
+      {import.meta.env.VITE_OPENCHAT_URL ? (
+        <a
+          href={import.meta.env.VITE_OPENCHAT_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="fixed bottom-6 right-24 z-50 h-14 w-14 rounded-full bg-[#FEE500] text-black flex items-center justify-center shadow-soft hover:scale-105 transition"
+          aria-label="카카오 오픈채팅"
+          title="카카오 오픈채팅"
+        >
+          톡
+        </a>
+      ) : null}
     </div>
   )
 }

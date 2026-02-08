@@ -6,8 +6,8 @@ export default {
     extend: {
       colors: {
         accent: {
-          DEFAULT: '#7c3aed',
-          dark: '#6d28d9',
+          DEFAULT: '#d4af37',
+          dark: '#b8860b',
           blue: '#3b82f6',
         },
       },
